@@ -1,7 +1,7 @@
 exports = async function(payload, response) {
+
   // verify slack auth
   var slackAuth = context.functions.execute("validateSlackAPICall", payload);
-  console.log("THIS IS SLACK AUTH RESPONSE ", slackAuth);
   if (!slackAuth || slackAuth.status !== 'success') {
     return slackAuth;
   }

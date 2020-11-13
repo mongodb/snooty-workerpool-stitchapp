@@ -4,16 +4,14 @@ exports = async function(payload, response) {
   //const yaml = require('js-yaml');
   
   // http service
-  // const httpService = context.services.get("slackHTTPService");
+  const httpService = context.services.get("slackHTTPService");
 
   // verify slack auth
-  // var slackAuth = context.functions.execute("validateSlackAPICall", payload);
-  // if (!slackAuth || slackAuth.status !== 'success') {
-  //   return slackAuth;
-  // }
+  var slackAuth = context.functions.execute("validateSlackAPICall", payload);
+  if (!slackAuth || slackAuth.status !== 'success') {
+    return slackAuth;
+  }
   
-  let payl = {}
-  payl.query = {user_id : "UK36F91M1"}
   // get repo options for this user from slack and send over
   var entitlement = await context.functions.execute("getUserEntitlements", payload);
   if (!entitlement || entitlement.status !== 'success') {
@@ -32,15 +30,8 @@ exports = async function(payload, response) {
     const coll_name = "repos_branches"
     
     var repoCollection = context.services.get("mongodb-atlas").db(db_name).collection(coll_name);
-    
-    //this is the line to debug!!
     const repo = await repoCollection.findOne({"repoName":repoName});
     const branches = repo["branches"]
-
-    //will we always have at least one branch for every repo 
-    // if (branches != null && branches.branches != null) {
-    //   pubBranches = pubBranches.concat(branches.branches);
-    // }
 
     // construct option for slack
     branches.forEach(branch => { 
@@ -119,7 +110,7 @@ exports = async function(payload, response) {
   };
   
   const http = context.services.get("slackHTTPService");
-  const token = context.values.get("test_deploy_slack_bot_token");
+  const token = context.values.get("slack_token");
   
   // post to slack to open modal
   // https://api.slack.com/surfaces/modals/using#opening_modals
