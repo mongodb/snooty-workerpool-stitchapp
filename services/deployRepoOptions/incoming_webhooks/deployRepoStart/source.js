@@ -1,7 +1,7 @@
 exports = async function(payload, response) {
-
   // verify slack auth
   var slackAuth = context.functions.execute("validateSlackAPICall", payload);
+  console.log("THIS IS SLACK AUTH RESPONSE ", slackAuth);
   if (!slackAuth || slackAuth.status !== 'success') {
     return slackAuth;
   }
@@ -10,7 +10,7 @@ exports = async function(payload, response) {
   
   // https://api.slack.com/interactivity/handling#payloads
   var parsed = JSON.parse(payload.query.payload);
-  var stateValues = parsed.view.state.values;
+  var stateValues = parsed.view.state.values; 
   
 
   // get repo options for this user from slack and send over
@@ -54,37 +54,40 @@ exports = async function(payload, response) {
     }
   }
   
-  
   for (let i = 0; i < values.repo_option.length; i++) {
     // // e.g. mongodb/docs-realm/master => (site/repo/branch)
-    var thisRepo = values.repo_option[i].value;
-    var buildDetails = thisRepo.split('/');
-    try {
-      let jobTitle     = 'Slack deploy: ' + entitlement.github_username;
-      let jobUserName  = entitlement.github_username;
-      let jobUserEmail = entitlement.email ? entitlement.email : 'split@nothing.com';
-      let isPrivate = (buildDetails[0] === '10gen') ? true : false;
-      const newPayload = {
-        jobType:    "productionDeploy",
-        source:     "github", 
-        action:     "push", 
-        repoName:   buildDetails[1], 
-        branchName: buildDetails[2],
-        isFork:     true, 
-        private:    isPrivate,
-        isXlarge:   true,
-        repoOwner:  buildDetails[0],
-        url:        'https://github.com/' + buildDetails[0] + '/' + buildDetails[1],
-        newHead:    values.hash_option ? values.hash_option : null,
-      }; 
-      
-      context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail);  
-    } catch(err) {
-      console.log(err);
+    const buildDetails = values.repo_option[i].value.split('/')
+    const repoOwner = buildDetails[0]
+    const repoName = buildDetails[1]
+    const branchName = buildDetails[2] 
+    const hashOption =  values.hash_option ? values.hash_option : null
+    const jobTitle     = 'Slack deploy: ' + entitlement.github_username;
+    const jobUserName  = entitlement.github_username;
+    const jobUserEmail = entitlement.email ? entitlement.email : 'split@nothing.com';
+    
+    const branchObject = await context.functions.execute("getBranchAlias", repoName, branchName)
+    const active = branchObject.aliasObject.active
+    const publishOriginalBranchName = branchObject.aliasObject.publishOriginalBranchName
+    const aliases = branchObject.aliasObject.aliases
+    
+    if (!active) {
+      continue;
     }
+    
+    // if we want to deploy orig branch name (along with its aliases) 
+    // or if we want to deploy branch of non-versioned repo that has no alias (ie docs-tutorials/master)
+    if (publishOriginalBranchName || aliases === null) {
+      const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName, null, hashOption)
+      context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail);  
+    }
+    
+    aliases.forEach(function(alias) {
+      const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName, alias, hashOption)
+      context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail); 
+    })
   }
   
-  // respond to modal
+  //respond to modal
   response.setHeader("Content-Type", "application/json");
   response.setStatusCode(200);
     
