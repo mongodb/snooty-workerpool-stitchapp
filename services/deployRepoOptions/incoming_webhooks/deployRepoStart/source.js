@@ -74,17 +74,23 @@ exports = async function(payload, response) {
       continue;
     }
     
-    // if we want to deploy orig branch name (along with its aliases) 
-    // or if we want to deploy branch of non-versioned repo that has no alias (ie docs-tutorials/master)
-    if (publishOriginalBranchName || aliases === null) {
-      const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName, null, hashOption)
-      context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail);  
+    try {
+      // if we want to deploy orig branch name (along with its aliases) 
+      // or if we want to deploy branch of non-versioned repo that has no alias (ie docs-tutorials/master)
+      if (publishOriginalBranchName || aliases === null) {
+        const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName, null, hashOption)
+        context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail);  
+      }
+      
+      aliases.forEach(function(alias) {
+        const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName, alias, hashOption)
+        context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail); 
+      })      
+    } catch (error) {
+      console.log(error);
+      throw error
     }
-    
-    aliases.forEach(function(alias) {
-      const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName, alias, hashOption)
-      context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail); 
-    })
+
   }
   
   //respond to modal
