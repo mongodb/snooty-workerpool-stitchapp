@@ -87,7 +87,7 @@ exports = async function(payload){
   
   // Compose the message including the job link
   let message = "Your Job (<" + jobUrl + jobId + "|" +  jobTitle + ">) "; 
-  message += (slackMsgs.toString().indexOf('WARNING') !== -1) ? 
+  message += (slackMsgs.toString().indexOf('WARNING:') !== -1) ? 
     "finished build with *WARNINGS*. " : 
     "finished build with no warnings. ";
   // only get the summary portion of build output
