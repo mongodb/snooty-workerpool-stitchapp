@@ -1,5 +1,4 @@
 exports = async function(payload, response) {
-
   // verify slack auth
   var slackAuth = context.functions.execute("validateSlackAPICall", payload);
   if (!slackAuth || slackAuth.status !== 'success') {
@@ -74,23 +73,23 @@ exports = async function(payload, response) {
       continue;
     }
     
-    try {
-      // if we want to deploy orig branch name (along with its aliases) 
-      // or if we want to deploy branch of non-versioned repo that has no alias (ie docs-tutorials/master)
-      if (publishOriginalBranchName || aliases === null) {
-        const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName, null, hashOption)
-        context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail);  
-      }
-      
-      aliases.forEach(function(alias) {
-        const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName, alias, hashOption)
-        context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail); 
-      })      
-    } catch (error) {
-      console.log(error);
-      throw error
+    // we use the primary alias for indexing search, not the original branch name (ie 'master'), for aliased repos 
+    if (publishOriginalBranchName && aliases) {
+      const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName,  hashOption, true, null)
+      context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail);  
     }
-
+    
+    //if this is stablebranch, we want autobuilder to know this is unaliased branch and therefore can reindex for search
+    if (aliases === null) {
+      const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName,  hashOption, false, null)
+      context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail);  
+    }
+    
+    aliases.forEach(function(alias, index) {
+      const primaryAlias = true ? index === 0 : false; 
+      const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName, hashOption, true, alias, primaryAlias)
+      context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail); 
+    })
   }
   
   //respond to modal
