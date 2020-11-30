@@ -109,7 +109,7 @@ exports = async function(payload, response) {
   };
   
   const http = context.services.get("slackHTTPService");
-  const token = context.values.get("test_deploy_slack_bot_token");
+  const token = context.values.get("slack_token");
   
   // post to slack to open modal
   // https://api.slack.com/surfaces/modals/using#opening_modals
