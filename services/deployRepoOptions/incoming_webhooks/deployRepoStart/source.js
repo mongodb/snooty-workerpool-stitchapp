@@ -86,7 +86,7 @@ exports = async function(payload, response) {
     }
     
     aliases.forEach(function(alias, index) {
-      const primaryAlias = (index === 0 ?  true : false); 
+      const primaryAlias = (index === 0); 
       const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName, hashOption, true, alias, primaryAlias)
       context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail); 
     })
