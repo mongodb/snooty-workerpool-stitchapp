@@ -80,16 +80,17 @@ exports = async function(payload, response) {
     }
     
     //if this is stablebranch, we want autobuilder to know this is unaliased branch and therefore can reindex for search
-    if (aliases === null) {
+    else if (aliases === null) {
       const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName,  hashOption, false, null)
       context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail);  
     }
-    
-    aliases.forEach(function(alias, index) {
-      const primaryAlias = (index === 0); 
-      const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName, hashOption, true, alias, primaryAlias)
-      context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail); 
-    })
+    else {
+      aliases.forEach(function(alias, index) {
+        const primaryAlias = (index === 0); 
+        const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName, hashOption, true, alias, primaryAlias)
+        context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail); 
+      })
+    }
   }
   
   //respond to modal
