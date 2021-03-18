@@ -80,7 +80,7 @@ exports = async function(payload, response) {
     }
     
     //if this is stablebranch, we want autobuilder to know this is unaliased branch and therefore can reindex for search
-    else if (aliases === null) {
+    if (aliases === null) {
       const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName,  hashOption, false, null)
       context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail);  
     }
