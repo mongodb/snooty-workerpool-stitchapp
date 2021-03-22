@@ -72,24 +72,24 @@ exports = async function(payload, response) {
     if (!active) {
       continue;
     }
-    
-    // we use the primary alias for indexing search, not the original branch name (ie 'master'), for aliased repos 
-    if (publishOriginalBranchName && aliases) {
-      const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName,  hashOption, true, null)
-      context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail);  
-    }
-    
-    //if this is stablebranch, we want autobuilder to know this is unaliased branch and therefore can reindex for search
+    //This is for non aliased branch
     if (aliases === null) {
       const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName,  hashOption, false, null)
       context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail);  
     }
-    
-    aliases.forEach(function(alias, index) {
-      const primaryAlias = (index === 0); 
-      const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName, hashOption, true, alias, primaryAlias)
-      context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail); 
-    })
+    //if this is stablebranch, we want autobuilder to know this is unaliased branch and therefore can reindex for search
+    else {
+          // we use the primary alias for indexing search, not the original branch name (ie 'master'), for aliased repos 
+      if (publishOriginalBranchName && aliases) {
+        const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName,  hashOption, true, null)
+        context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail);  
+      }
+      aliases.forEach(function(alias, index) {
+        const primaryAlias = (index === 0); 
+        const newPayload = context.functions.execute("createNewPayload", "productionDeploy", repoOwner, repoName, branchName, hashOption, true, alias, primaryAlias)
+        context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail); 
+      })
+    }
   }
   
   //respond to modal
