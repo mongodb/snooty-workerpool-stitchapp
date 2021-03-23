@@ -24,10 +24,10 @@ exports = function(payload, jobTitle, jobUserName, jobUserEmail){
     endTime: null, 
     priority: 1, 
     numFailures: 0, 
-    failures: [], 
+    error: {}, 
     result: null, 
     payload: payload, 
-    logs: {},
+    logs: [],
   };
   
   // we are looking for jobs in the queue with the same payload that have not yet started (startTime == null)
