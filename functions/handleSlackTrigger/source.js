@@ -69,23 +69,12 @@ exports = async function(payload){
     message += "has successfully been added to the queue.";
   } else {
     let newStatus = payload.fullDocument.status;
-    if (newStatus === "inQueue") {
-      message += "has been moved back into the job queue (" 
-          + payload.fullDocument.numFailures + " times)";
-      try {
-        let failures = payload.fullDocument.failures;
-        let lastFailure = failures[failures.length - 1];
-        message += " with error {" + lastFailure.reason + "}.";
-      } catch(err) {
-        console.log("Error: " + err);
-      }
-    } else if (newStatus === "inProgress") {
+    if (newStatus === "inProgress") {
       message += "is now being processed.";
     } else if (newStatus === "completed") {
       message += "has successfully completed.";
     } else if (newStatus === "failed") {
-      message += "has failed " + payload.fullDocument.numFailures 
-          + " times and will not be placed back in the queue.";
+      message += "has failed and will not be placed back in the queue.";
     } else {
       message += "has been updated to an unsupported status.";
     }
