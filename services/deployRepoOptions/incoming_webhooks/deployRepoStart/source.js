@@ -52,6 +52,12 @@ exports = async function(payload, response) {
       values[blockInputKey] = null;
     }
   }
+
+  let coll_name = context.values.get("coll_name");
+  const collection_mappings = context.values.get("stage_collection_mapping");
+  if (parsed.user.id in collection_mappings) {
+      coll_name = collection_mappings[parsed.user.id];
+  }
   
   for (let i = 0; i < values.repo_option.length; i++) {
     // // e.g. mongodb/docs-realm/master => (site/repo/branch)

@@ -9,15 +9,21 @@ exports = async function(payload){
   // Get the Slack Service
   const slack = context.services.get("slackHTTPService");
   
-  // URL for the jobs dashboard site
-  const jobUrl = "https://workerpoolstaging-qgeyp.mongodbstitch.com/pages/job.html?jobId=";
+  // get username/email mapping
+  var usernameMapping = context.functions.execute("getUsernameMapping");
   
+  
+  console.log(JSON.stringify(payload.fullDocument));
   // Extract information from the payload
   const jobTitle = payload.fullDocument.title;
   const jobId = payload.fullDocument._id;
   const email = payload.fullDocument.email;
   const repoName = payload.fullDocument.payload.repoName;
+  const username = payload.fullDocument.user;
+  const collName = payload.ns.coll;
   
+ // URL for the jobs dashboard site
+  const jobUrl = `https://workerpoolstaging-qgeyp.mongodbstitch.com/pages/job.html?collName=${collName}&jobId=${jobId}`;
   // Split email into mongoEmail and tenGenEmail or fail 
   let splits = email.split("@");
   if (splits[1] === "mongodb.com") {
@@ -27,8 +33,14 @@ exports = async function(payload){
     tenGenEmail = email;
     mongoEmail  = splits[0] + "@mongodb.com";
   } else {
-    console.log("Invalid email: " + email);
-    return;
+    console.log('private email found, now getting email from mapping object');
+    if (usernameMapping[username]) {
+      tenGenEmail = usernameMapping[username];
+      mongoEmail = tenGenEmail.replace('10gen.com', 'mongodb.com');
+    } else {
+      console.log("Invalid email: " + email);
+      return;
+    }
   }
   
   console.log("Update to: " + jobTitle + " (" + jobId + ")");
@@ -48,11 +60,13 @@ exports = async function(payload){
   // Issue the get request
   let getResp = await slack.get(getRequest);
   getResp = EJSON.parse(getResp.body.text());
+  console.log(JSON.stringify(getResp));
 
+  console.log(payload.fullDocument);
   // If we did not get the email --> try the other one
   if (getResp.ok === false) {
     console.log("Couldnt find the mongodb email");
-    console.log(JSON.stringify(getResp));
+    
     getRequest.query.email = [tenGenEmail];
     getResp = await slack.get(getRequest);
     getResp = EJSON.parse(getResp.body.text());
@@ -64,12 +78,12 @@ exports = async function(payload){
   }
   
   // Compose the message including the job link
-  let message = "Your Job (<" + jobUrl + jobId + "|" +  jobTitle + ">) ";  
+  let message = "Your Job (<" + jobUrl + "|" +  jobTitle + ">) ";  
   if (payload.operationType === "insert") {
     message += "has successfully been added to the queue.";
   } else {
     let newStatus = payload.fullDocument.status;
-    if (newStatus === "inProgress") {
+   if (newStatus === "inProgress") {
       message += "is now being processed.";
     } else if (newStatus === "completed") {
       message += "has successfully completed.";
@@ -80,6 +94,7 @@ exports = async function(payload){
     }
   }
   console.log(message);
+  const bot_token = context.values.get("slack_bot_oauth_token")
   
   // Compose the post request
   let postRequest = {
@@ -87,7 +102,7 @@ exports = async function(payload){
     host: host,
     path: postMessage,
     query: {
-      token: [token], 
+      token: [bot_token], 
       channel: [getResp.user.id],
       text: [message],
      },
@@ -96,8 +111,6 @@ exports = async function(payload){
   // Issue the post request
   let postResp = await slack.post(postRequest);
   postResp = EJSON.parse(postResp.body.text());
-  
-  console.log(222222, JSON.stringify(postResp));
   
   // Log and return the answer
   console.log(JSON.stringify(postResp));
