@@ -37,7 +37,7 @@ exports = function(payload) {
     console.log(JSON.stringify(newPayload));
     let coll_name = context.values.get("coll_name");
     const collection_mappings = context.values.get("stage_collection_mapping");
-    if (jobUserName in collection_mappings) {
+    if (collection_mappings && jobUserName in collection_mappings) {
       coll_name = collection_mappings[jobUserName];
     }
     console.log(coll_name);
