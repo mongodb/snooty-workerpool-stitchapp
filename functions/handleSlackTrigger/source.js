@@ -12,8 +12,6 @@ exports = async function(payload){
   // get username/email mapping
   var usernameMapping = context.functions.execute("getUsernameMapping");
   
-  
-  console.log(JSON.stringify(payload.fullDocument));
   // Extract information from the payload
   const jobTitle = payload.fullDocument.title;
   const jobId = payload.fullDocument._id;

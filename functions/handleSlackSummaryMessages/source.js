@@ -23,7 +23,6 @@ exports = async function(payload){
   
   // URL for the jobs dashboard site
   const jobUrl = `https://workerpoolstaging-qgeyp.mongodbstitch.com/pages/job.html?collName=${collName}&jobId=${jobId}`;
-  console.log(jobUrl)
   // Split email into mongoEmail and tenGenEmail or fail 
   let splits = email.split("@");
   if (splits[1] === "mongodb.com") {
