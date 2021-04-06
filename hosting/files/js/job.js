@@ -12,7 +12,13 @@ stitchClient.auth.loginWithCredential(new stitch.AnonymousCredential()).then(use
     url.searchParams.forEach((v,k) => { dict[k] = v });
     
     // Would like to switch this out eventually
-    stitchClient.callFunction("getJobById", [dict["jobId"]]).then(result => {
+    collName = 'queue';
+    if ('collName' in dict) {
+        collName = dict['collName'];
+    }
+    console.log(JSON.stringify(dict));
+
+    stitchClient.callFunction("getJobById", [dict["jobId"], collName]).then(result => {
         const job = {
             _id: result._id.toString(), 
             title: result.title, 
@@ -22,18 +28,13 @@ stitchClient.auth.loginWithCredential(new stitch.AnonymousCredential()).then(use
             status: result.status, 
             createdTime: formatDate(result.createdTime), 
             startTime: formatDate(result.startTime), 
-            endTime: formatDate(result.endTime), 
-            numFailures: result.numFailures, 
-            failures: result.failures, 
+            endTime: formatDate(result.endTime),
+            error: result.error, 
             result: result.result,
             payload: result.payload,
             logs: result.logs,
         }
-
-        for (const failure of job.failures) {
-            failure.time = formatDate(failure.time);
-        }
-
+        
         $('#json-renderer').jsonViewer(job);
     }).catch(err => {
         console.log(err)

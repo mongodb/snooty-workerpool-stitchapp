@@ -4,6 +4,14 @@ const stitchClient = stitch.Stitch.initializeDefaultAppClient(window.STITCH_APP_
 stitchClient.auth.loginWithCredential(new stitch.AnonymousCredential()).then(async user => {
 	console.log(`Logged in as anonymous user with id ${user.id}`);
 
+	const url = new URL(window.location.href);
+    const dict = {};
+    url.searchParams.forEach((v,k) => { dict[k] = v });
+
+	collName = 'queue';
+    if ('collName' in dict) {
+        collName = dict['collName'];
+    }
 	// Get Atlas client
 	const mongoClient = stitchClient.getServiceClient(
 		stitch.RemoteMongoClient.factory,
@@ -13,7 +21,7 @@ stitchClient.auth.loginWithCredential(new stitch.AnonymousCredential()).then(asy
 	const dbValues = await stitchClient.callFunction('getDBCollection');
 	
 	// Get a reference to the items database
-	const itemsCollection = mongoClient.db(dbValues.db_name).collection('queue');
+	const itemsCollection = mongoClient.db(dbValues.db_name).collection(collName);
 
 	/***************************************************************************** 
 	 *       Get the distributions of the status of jobs in the queue            *
@@ -116,10 +124,10 @@ stitchClient.auth.loginWithCredential(new stitch.AnonymousCredential()).then(asy
 	oneHourAgo.setHours(oneHourAgo.getHours() - 1);
 
 	const statuses = {
-		inQueue: {status: "inQueue", '$or': [{createdTime: null}, {startTime: {$ne: null}}, {endTime: {$ne: null}}, {numFailures: {$gte: 3}}]},
-		inProgress: {status: "inProgress", '$or': [{createdTime: null}, {startTime: null}, {endTime: {$ne: null}}, {numFailures: {$gte: 3}}, {startTime: {$lte: oneHourAgo}}]}, 
-		completed: {status: "completed", '$or': [{createdTime: null}, {startTime: null}, {endTime: null}, {numFailures: {$gte: 3}}]},
-		failed: {status: "failed", '$or': [{createdTime: null},{startTime: {$ne: null}}, {endTime: {$ne: null}},  {numFailures: {$lt: 3}}]},
+		inQueue: {status: "inQueue", '$or': [{createdTime: null}, {startTime: {$ne: null}}, {endTime: {$ne: null}}]},
+		inProgress: {status: "inProgress", '$or': [{createdTime: null}, {startTime: null}, {endTime: {$ne: null}}, {startTime: {$lte: oneHourAgo}}]}, 
+		completed: {status: "completed", '$or': [{createdTime: null}, {startTime: null}, {endTime: null}]},
+		failed: {status: "failed", '$or': [{createdTime: null},{startTime: {$ne: null}}, {endTime: {$ne: null}}]},
 	}; 
 
 	itemsCollection.find({status: {$nin: Object.keys(statuses)}}, options).asArray().then(results => {
