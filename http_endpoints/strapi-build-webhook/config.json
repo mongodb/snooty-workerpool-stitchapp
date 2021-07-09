@@ -1,6 +1,0 @@
-{
-    "name": "strapi-build-webhook",
-    "type": "http",
-    "config": {},
-    "version": 1
-}
