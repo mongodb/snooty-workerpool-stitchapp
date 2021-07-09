@@ -1,2 +1,3 @@
-auth_providers
-values
+app/auth_providers
+app/values
+node_modules
