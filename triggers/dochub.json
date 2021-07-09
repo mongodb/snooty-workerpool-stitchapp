@@ -1,20 +1,22 @@
 {
-    "id": "5d52c8945b09ed139d3985c1",
-    "name": "triggerSlackMessages",
+    "id": "5e2b535c2cc8b7e914a5aa4f",
+    "name": "dochub",
     "type": "DATABASE",
     "config": {
         "operation_types": [
-            "UPDATE"
+            "INSERT",
+            "UPDATE",
+            "REPLACE"
         ],
-        "database": "pool",
-        "collection": "queue",
+        "database": "dochub",
+        "collection": "keys",
         "service_name": "mongodb-atlas",
         "match": {},
         "project": {},
         "full_document": true,
         "full_document_before_change": false,
-        "unordered": true
+        "unordered": false
     },
-    "function_name": "handleSlackSummaryMessages",
+    "function_name": "addDocHubJobToQueue",
     "disabled": false
 }

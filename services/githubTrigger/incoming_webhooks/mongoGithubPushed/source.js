@@ -6,7 +6,7 @@
 */
   
 exports = function(payload) {
-  
+  console.log(JSON.stringify(payload));
   try {
     let jobTitle     = "Github Push: " + payload.repository.full_name;
     let jobUserName  = payload.pusher.name;
