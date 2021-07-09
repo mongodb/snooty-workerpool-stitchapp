@@ -1,0 +1,10 @@
+{
+    "id": "5f291e48108c22f91ffb9f75",
+    "name": "TestJob",
+    "type": "SCHEDULED",
+    "config": {
+        "schedule": "0 */1 * * *"
+    },
+    "function_name": "AddJobToQueueTest",
+    "disabled": true
+}

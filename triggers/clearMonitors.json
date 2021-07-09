@@ -1,0 +1,10 @@
+{
+    "id": "5dd9fc735f7e928f5779f7a6",
+    "name": "clearMonitors",
+    "type": "SCHEDULED",
+    "config": {
+        "schedule": "0 */1 * * *"
+    },
+    "function_name": "clearMonitors",
+    "disabled": false
+}

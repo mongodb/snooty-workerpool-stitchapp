@@ -1,0 +1,20 @@
+{
+    "id": "5d4328042de84772fcdf9faf",
+    "name": "triggerSlackMessages",
+    "type": "DATABASE",
+    "config": {
+        "operation_types": [
+            "UPDATE"
+        ],
+        "database": "pool_test",
+        "collection": "queue",
+        "service_name": "mongodb-atlas",
+        "match": {},
+        "project": {},
+        "full_document": true,
+        "full_document_before_change": false,
+        "unordered": true
+    },
+    "function_name": "handleSlackSummaryMessages",
+    "disabled": false
+}

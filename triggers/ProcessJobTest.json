@@ -1,0 +1,20 @@
+{
+    "id": "5f292c93108c22f91f00b54f",
+    "name": "ProcessJobTest",
+    "type": "DATABASE",
+    "config": {
+        "operation_types": [
+            "UPDATE"
+        ],
+        "database": "pool_test",
+        "collection": "queue",
+        "service_name": "mongodb-atlas",
+        "match": {},
+        "project": {},
+        "full_document": true,
+        "full_document_before_change": false,
+        "unordered": false
+    },
+    "function_name": "ProcessJobTestResults",
+    "disabled": false
+}

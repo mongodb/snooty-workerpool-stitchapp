@@ -1,0 +1,39 @@
+{
+    "id": "60538b1331b9eed2de47779e",
+    "name": "triggerSlackMessageInsertGuruColl",
+    "type": "DATABASE",
+    "config": {
+        "operation_types": [
+            "INSERT",
+            "UPDATE"
+        ],
+        "database": "pool_test",
+        "collection": "guru_test_queue",
+        "service_name": "mongodb-atlas",
+        "match": {
+            "$or": [
+                {
+                    "operationType": "update",
+                    "updateDescription.updatedFields.status": {
+                        "$exists": true
+                    }
+                },
+                {
+                    "operationType": "update",
+                    "updateDescription.updatedFields.status": {
+                        "$exists": true
+                    }
+                },
+                {
+                    "operationType": "insert"
+                }
+            ]
+        },
+        "project": {},
+        "full_document": true,
+        "full_document_before_change": false,
+        "unordered": true
+    },
+    "function_name": "handleSlackTrigger",
+    "disabled": false
+}
