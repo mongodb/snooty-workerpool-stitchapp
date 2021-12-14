@@ -1,5 +1,5 @@
 {
     "name": "db_name",
-    "value": "pool",
+    "value": "pool_test",
     "from_secret": false
 }
