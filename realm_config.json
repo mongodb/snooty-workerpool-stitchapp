@@ -1,0 +1,7 @@
+{
+    "app_id": "workerpool-boxgs",
+    "config_version": 20210101,
+    "name": "WorkerPool",
+    "location": "US-VA",
+    "deployment_model": "GLOBAL"
+}

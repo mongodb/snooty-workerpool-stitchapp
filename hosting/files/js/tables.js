@@ -24,15 +24,6 @@ if (type in typeToName) {
 stitchClient.auth.loginWithCredential(new stitch.AnonymousCredential()).then(async user => {
 	console.log(`Logged in as anonymous user with id ${user.id}`);
 
-    const url = new URL(window.location.href);
-    const dict = {};
-    url.searchParams.forEach((v,k) => { dict[k] = v });
-
-	collName = 'queue';
-    if ('collName' in dict) {
-        collName = dict['collName'];
-    }
-
 	// Get Atlas client
 	const mongoClient = stitchClient.getServiceClient(
 		stitch.RemoteMongoClient.factory,
@@ -42,7 +33,7 @@ stitchClient.auth.loginWithCredential(new stitch.AnonymousCredential()).then(asy
     const dbValues = await stitchClient.callFunction('getDBCollection');
 	
 	// Get a reference to the items database
-	const itemsCollection = mongoClient.db(dbValues.db_name).collection(collName);
+	const itemsCollection = mongoClient.db(dbValues.db_name).collection('queue');
 	
 	/***************************************************************************** 
 	 *       Get the distributions of the status of jobs in the queue            *

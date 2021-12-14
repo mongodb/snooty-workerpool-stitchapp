@@ -1,10 +1,13 @@
 {
-    "id": "5d3223dda30ea1b1cf104063",
     "name": "webhookxlarge",
+    "run_as_authed_user": false,
     "run_as_user_id": "",
     "run_as_user_id_script_source": "",
+    "can_evaluate": {},
     "options": {
         "secret": "mongostitchgithub"
     },
-    "respond_result": false
+    "respond_result": false,
+    "fetch_custom_user_data": false,
+    "create_user_on_auth": false
 }

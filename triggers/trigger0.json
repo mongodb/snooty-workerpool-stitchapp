@@ -1,5 +1,4 @@
 {
-    "id": "5d4187c6860ce4b18e41510b",
     "name": "trigger0",
     "type": "DATABASE",
     "config": {
@@ -7,7 +6,7 @@
             "INSERT",
             "UPDATE"
         ],
-        "database": "pool_test",
+        "database": "pool",
         "collection": "queue",
         "service_name": "mongodb-atlas",
         "match": {
@@ -29,9 +28,17 @@
                 }
             ]
         },
+        "project": {},
         "full_document": true,
+        "full_document_before_change": false,
         "unordered": true
     },
-    "function_name": "handleSlackTrigger",
-    "disabled": false
+    "disabled": false,
+    "event_processors": {
+        "FUNCTION": {
+            "config": {
+                "function_name": "handleSlackTrigger"
+            }
+        }
+    }
 }

@@ -7,19 +7,10 @@
   
 exports = function(payload) {
   
-  var result = context.functions.execute("validateNewJob", payload);
-  
-  console.log(JSON.stringify(payload));
-
-  if (!result.valid) {
-    console.log(result.error);
-    return result.error ;
-  }
-  
   try {
     let jobTitle     = "Github Push: " + payload.repository.full_name;
-    let jobUserName  = payload.pusher.name;
-    let jobUserEmail = payload.pusher.email;
+    let jobUserName  = payload.pusher ? payload.pusher.name : 'undefined';
+    let jobUserEmail = payload.pusher ? payload.pusher.email : 'undefined';
     const newPayload = {
       jobType:    "githubPush",
       source:     "github", 
@@ -35,15 +26,11 @@ exports = function(payload) {
     }; 
     
     console.log(JSON.stringify(newPayload));
-    let coll_name = context.values.get("coll_name");
-    const collection_mappings = context.values.get("stage_collection_mapping");
-    if (collection_mappings && jobUserName in collection_mappings) {
-      coll_name = collection_mappings[jobUserName];
-    }
-    console.log(coll_name);
-    context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail, coll_name);  
+    
+    context.functions.execute("addJobToQueue", newPayload, jobTitle, jobUserName, jobUserEmail);  
   } catch(err) {
     console.log(err);
+    throw err;
   }
   
 };

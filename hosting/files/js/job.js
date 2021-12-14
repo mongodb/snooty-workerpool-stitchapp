@@ -12,13 +12,7 @@ stitchClient.auth.loginWithCredential(new stitch.AnonymousCredential()).then(use
     url.searchParams.forEach((v,k) => { dict[k] = v });
     
     // Would like to switch this out eventually
-    collName = 'queue';
-    if ('collName' in dict) {
-        collName = dict['collName'];
-    }
-    console.log(JSON.stringify(dict));
-
-    stitchClient.callFunction("getJobById", [dict["jobId"], collName]).then(result => {
+    stitchClient.callFunction("getJobById", [dict["jobId"]]).then(result => {
         const job = {
             _id: result._id.toString(), 
             title: result.title, 

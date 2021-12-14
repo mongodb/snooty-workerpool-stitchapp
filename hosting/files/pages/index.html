@@ -19,9 +19,6 @@
     <!-- Custom CSS -->
     <link href="../css/sb-admin-2.min.css" rel="stylesheet">
 
-    <!-- Morris Charts CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css" rel="stylesheet">
-
     <!-- Custom Fonts -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 </head>
@@ -81,7 +78,7 @@
                                     <i class="fa fa-list-alt fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge" id="numInQueue"></div>
+                                    <div class="huge" id="numInQueue">0</div>
                                     <div>Jobs in Queue</div>
                                 </div>
                             </div>
@@ -103,7 +100,7 @@
                                     <i class="fa fa-refresh fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge" id="numInProgress"></div>
+                                    <div class="huge" id="numInProgress">0</div>
                                     <div>Jobs in Progress</div>
                                 </div>
                             </div>
@@ -125,7 +122,7 @@
                                     <i class="fa fa-check-circle-o fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge" id="numCompleted"></div>
+                                    <div class="huge" id="numCompleted">0</div>
                                     <div>Completed Jobs</div>
                                 </div>
                             </div>
@@ -147,7 +144,7 @@
                                     <i class="fa fa-times-circle-o fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge" id="numFailed"></div>
+                                    <div class="huge" id="numFailed">0</div>
                                     <div>Failed Jobs</div>
                                 </div>
                             </div>
@@ -177,11 +174,11 @@
                     <!-- /.panel -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <i class="fa fa-bar-chart-o fa-fw"></i> Processing Time of Jobs Over Time
+                            <i class="fa fa-bar-chart-o fa-fw"></i> <iframe style="border: none;border-radius: 2px;box-shadow: 0 2px 10px 0 rgba(70, 76, 79, .2);" width="640" height="480" src="https://charts.mongodb.com/charts-docs-tools-poc-dzdlb/embed/charts?id=f0c7cb09-3c00-4541-a467-c492e363943b&tenant=f5dcaae6-a6d0-4da7-9df3-d1aa17b9806c"></iframe>
                         </div>
                         <!-- /.panel-heading -->
-                        <div class="panel-body">
-                            <iframe style="border: none;border-radius: 2px;box-shadow: 0 2px 10px 0 rgba(70, 76, 79, .2);" width="640" height="480" src="https://charts.mongodb.com/charts-docs-tools-poc-dzdlb/embed/charts?id=f0c7cb09-3c00-4541-a467-c492e363943b&tenant=f5dcaae6-a6d0-4da7-9df3-d1aa17b9806c"></iframe>
+                        <div class="panel-body"
+                            <!-- /.row -->
                         </div>
                         <!-- /.panel-body -->
                     </div>

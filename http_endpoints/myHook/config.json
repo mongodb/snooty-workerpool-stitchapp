@@ -1,0 +1,6 @@
+{
+    "name": "myHook",
+    "type": "http",
+    "config": {},
+    "version": 1
+}

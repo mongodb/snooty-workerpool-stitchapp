@@ -1,0 +1,5 @@
+{
+    "name": "slack_token",
+    "value": "slack_token",
+    "from_secret": true
+}

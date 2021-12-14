@@ -1,0 +1,88 @@
+[
+    {
+        "name": "addJobToQueue",
+        "private": true
+    },
+    {
+        "name": "validateNewJob",
+        "private": false
+    },
+    {
+        "name": "resetTestJobs",
+        "private": true
+    },
+    {
+        "name": "getNextNJobsInQueue",
+        "private": false
+    },
+    {
+        "name": "getJobById",
+        "private": false
+    },
+    {
+        "name": "handleSlackTrigger",
+        "private": true
+    },
+    {
+        "name": "getDBCollection",
+        "private": false
+    },
+    {
+        "name": "handleSlackSummaryMessages",
+        "private": true
+    },
+    {
+        "name": "getUsernameMapping",
+        "private": true,
+        "can_evaluate": {}
+    },
+    {
+        "name": "clearMonitors",
+        "private": true,
+        "run_as_system": true
+    },
+    {
+        "name": "getAdmins",
+        "private": true,
+        "run_as_system": true
+    },
+    {
+        "name": "monitorTrigger",
+        "private": true,
+        "run_as_system": true
+    },
+    {
+        "name": "sendMonitoringAlert",
+        "private": true,
+        "run_as_system": true
+    },
+    {
+        "name": "validateSlackAPICall",
+        "private": false
+    },
+    {
+        "name": "getUserEntitlements",
+        "private": false
+    },
+    {
+        "name": "addDocHubJobToQueue",
+        "private": true,
+        "can_evaluate": {}
+    },
+    {
+        "name": "getReposApprovedForTesting",
+        "private": false
+    },
+    {
+        "name": "AddJobToQueueTest",
+        "private": true
+    },
+    {
+        "name": "createNewPayload",
+        "private": false
+    },
+    {
+        "name": "getBranchAlias",
+        "private": false
+    }
+]

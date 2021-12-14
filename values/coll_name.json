@@ -1,0 +1,5 @@
+{
+    "name": "coll_name",
+    "value": "queue",
+    "from_secret": false
+}
