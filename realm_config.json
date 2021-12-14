@@ -1,7 +1,7 @@
 {
     "app_id": "workerpoolstaging-qgeyp",
     "config_version": 20210101,
-    "name": "workerpoolstaging",
+    "name": "WorkerPoolStaging",
     "location": "US-VA",
     "deployment_model": "GLOBAL"
 }
