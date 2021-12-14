@@ -1,4 +1,5 @@
 {
     "name": "slack_bot_oauth_token",
+    "value": "slack_bot_oauth_token",
     "from_secret": true
 }
