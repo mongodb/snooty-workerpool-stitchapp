@@ -6,11 +6,11 @@ const dict = {};
 url.searchParams.forEach((v,k) => { dict[k] = v });
 
 const typeToName = {
-    jobsInQueue: "Jobs Currently in Queue", 
-    jobsInProgress: "Jobs Currently in Progress", 
-    jobsFailed: "Jobs That Have Failed", 
-    jobsCompleted: "Jobs That Have Succeeded", 
-    jobsAll: "All Jobs", 
+    jobsInQueue: "Jobs Currently in Queue (Production)", 
+    jobsInProgress: "Jobs Currently in Progress (Production)", 
+    jobsFailed: "Jobs That Have Failed (Production)", 
+    jobsCompleted: "Jobs That Have Succeeded (Production)", 
+    jobsAll: "All Jobs (Production)", 
     jobsUser: "Jobs Submitted by: " + dict["user"],
 }
 
@@ -19,6 +19,7 @@ if (type in typeToName) {
     const firstChild = document.getElementById('tableName').firstChild;
     const newChild   = document.createTextNode(typeToName[type]);
     document.getElementById('tableName').replaceChild(newChild, firstChild);
+    document.getElementById('tableName').style.color = '#00A35C';
 }
 
 stitchClient.auth.loginWithCredential(new stitch.AnonymousCredential()).then(async user => {
