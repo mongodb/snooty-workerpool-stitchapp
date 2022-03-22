@@ -6,11 +6,11 @@ const dict = {};
 url.searchParams.forEach((v,k) => { dict[k] = v });
 
 const typeToName = {
-    jobsInQueue: "Jobs Currently in Queue", 
-    jobsInProgress: "Jobs Currently in Progress", 
-    jobsFailed: "Jobs That Have Failed", 
-    jobsCompleted: "Jobs That Have Succeeded", 
-    jobsAll: "All Jobs", 
+    jobsInQueue: "Jobs Currently in Queue (Staging)", 
+    jobsInProgress: "Jobs Currently in Progress (Staging)", 
+    jobsFailed: "Jobs That Have Failed (Staging)", 
+    jobsCompleted: "Jobs That Have Succeeded (Staging)", 
+    jobsAll: "All Jobs (Staging)", 
     jobsUser: "Jobs Submitted by: " + dict["user"],
 }
 
@@ -19,6 +19,7 @@ if (type in typeToName) {
     const firstChild = document.getElementById('tableName').firstChild;
     const newChild   = document.createTextNode(typeToName[type]);
     document.getElementById('tableName').replaceChild(newChild, firstChild);
+    document.getElementById('tableName').style.color = '#1254B7';
 }
 
 stitchClient.auth.loginWithCredential(new stitch.AnonymousCredential()).then(async user => {
@@ -60,7 +61,7 @@ stitchClient.auth.loginWithCredential(new stitch.AnonymousCredential()).then(asy
 
     const options = {
         projection: {failures: 0, result: 0, payload: 0}, 
-        limit: 20,
+        limit: 50,
         sort: {createdTime: -1},
     }
 
@@ -90,11 +91,15 @@ stitchClient.auth.loginWithCredential(new stitch.AnonymousCredential()).then(asy
             rowElement.appendChild(tdElement);
 
             tdElement = document.createElement("td");
-            tdElement.appendChild(document.createTextNode(job.user));
+            tdElement.appendChild(document.createTextNode(job.payload.repoName));
             rowElement.appendChild(tdElement);
 
             tdElement = document.createElement("td");
-            tdElement.appendChild(document.createTextNode(job.priority));
+            tdElement.appendChild(document.createTextNode(job.payload.branchName));
+            rowElement.appendChild(tdElement);
+
+            tdElement = document.createElement("td");
+            tdElement.appendChild(document.createTextNode(job.user));
             rowElement.appendChild(tdElement);
 
             tdElement = document.createElement("td");
